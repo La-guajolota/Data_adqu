@@ -3,7 +3,7 @@ import time
 
 #Create Serial Object
 arduino = serial.Serial('COM17',9600)
-time.sleep(1)
+time.sleep(0.25)
 
 """
 try:
