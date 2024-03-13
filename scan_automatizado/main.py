@@ -4,30 +4,18 @@ from time import sleep
 
 print("---holaaaaa inicio del escanner---\n")
 
+doc_name = "doco"
+doc_name += ".cvs"
+
 #Constructor
-MCU = serial.Serial('COM5',9600)
+MCU = serial.Serial('COM17',9600)
 sleep(1)
 
 while(True):
     try:
-        #Calibra y da inicio a la rutina
-        print("calibrando...")
             
-        raw_data = MCU.readline()
-        string_data = raw_data.decode("utf-8").strip()
-        print(string_data)
-        sleep(0.5)
-
-        if(string_data == "all_ok"): #Terminamos de calibrar
-            
-            doc_name = input("Ingresa nomre de la seción: ")
-            doc_name += ".cvs"    
-
-            array_horizonral = [] # Almacena las celdas de cada fila
-            array = [] # Contiene subarrays
-
-            #Le avisamos al MCU que pase a scanear
-            MCU.write(bytes("n", 'utf-8'))
+        array_horizonral = [] # Almacena las celdas de cada fila
+        array = [] # Contiene subarrays
 
         #Recolecta y almacena
         latch = 1
@@ -55,9 +43,6 @@ while(True):
                 
                 #Almacena en documento
                 scan.storage(array,doc_name)
-
-                sleep(0.5) #Le avisamos al MCU que pase a scanear
-                MCU.write(bytes("n", 'utf-8'))
                 
                 latch = 0
             
