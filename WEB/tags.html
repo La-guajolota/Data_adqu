@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> Hola master </title>
+        <link rel="stylesheet" href="estilo.css">
+    </head>
+    <body>
+        <!--Esto es un comentario-->
+
+        <div class="login-container">
+            Esto es un login
+            <input type = "text" placeholder="Usuario" id="user">
+            <input type = "text" placeholder="Password" id="pass">
+            <div>
+                <button onclick="login()"> LOGIN </button>
+            </div>
+
+        </div>
+
+        <script>
+            const login = ()=>
+            {
+                const user = document.getElementById("user").value
+                const pass = document.getElementById("pass").value
+                alert("EL usuario es: "+user +"pass: "+pass)
+            }
+        </script>
+
+        <!--
+        <div class = "div-container">
+            <div class = "div-container">Esto es un div</div>
+            <div class = "div-container">Esto es otro div</div>
+        </div>
+        <div class = "div-container">
+            <span class = "span-container">Esto es span</span>
+            <span class = "span-container">Esto es otro span</span>
+        </div>
+        -->
+
+
+
+    </body>
+</html>

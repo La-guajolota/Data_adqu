@@ -1,0 +1,31 @@
+html,body
+{
+    /*comentario*/
+    height : 100%;
+    padding: 0;
+    margin: 0;
+    /*background-color: rgb(23, 234, 134);*/
+    background: rgb(238, 174, 202);
+    background: radial-gradient(circle,rgba(238,174,202,1) 0%,rgba(148,287,1) 100%);
+}
+
+.login-container
+{
+    position: relative;
+    border-radius: 25px;
+    left: 100px;
+    top: 100px;
+    background-color: white;
+    width: 250px;
+    height: 250px;
+}
+
+.div-container /*. es que significa clase*/
+{
+    border: 1px solid blue;
+}
+
+.span-container /*. es que significa clase*/
+{
+    border: 1px solid red;
+}

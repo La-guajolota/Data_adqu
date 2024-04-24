@@ -2,8 +2,8 @@ import serial
 from time import sleep
 
 #Create Serial Object
-mcu = serial.Serial('COM5', 9600)
-sleep(2)
+mcu = serial.Serial('COM17',9600)
+sleep(0.5)
 
 data = []
 
@@ -14,8 +14,8 @@ while(True):
         print(stringData)
         sleep(0.5)
 
-        command = input("Send command\n:")
+        command = input("Send features:\n:")
         mcu.write(bytes(command, 'utf-8'))
-        sleep(.5)
+        sleep(1)
     except Exception as e:
         mcu.close()
