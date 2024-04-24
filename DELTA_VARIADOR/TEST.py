@@ -1,14 +1,14 @@
 from pymodbus.client import ModbusTcpClient
 
 # Dirección IP del dispositivo Modbus TCP
-SERVER_IP = '192.168.1.100'
+SERVER_IP = '192.168.0.1'
 # Puerto del dispositivo Modbus TCP (generalmente es 502)
 SERVER_PORT = 502
 
 # Dirección del registro desde el cual leeremos datos
-REGISTER_ADDRESS = 0
+REGISTER_ADDRESS = 8193
 # Cantidad de registros a leer
-NUM_REGISTERS = 10
+NUM_REGISTERS = 1
 
 # Crear un cliente Modbus TCP
 client = ModbusTcpClient(SERVER_IP, port=SERVER_PORT)
