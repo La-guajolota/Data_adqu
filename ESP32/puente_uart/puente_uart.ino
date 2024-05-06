@@ -1,33 +1,34 @@
-uint8_t val =0;
-
-void setup() {
-  // Inicializa ambos puertos UART
-  Serial.begin(9600);  // Inicializa el puerto UART principal
-  Serial2.begin(9600); // Inicializa el segundo puerto UART
-
-    pinMode(2, OUTPUT);
-    digitalWrite(2,val);
+// Define Connections to 74HC595
+ 
+// ST_CP pin 12
+const int latchPin = 10;
+// SH_CP pin 11
+const int clockPin = 11;
+// DS pin 14
+const int dataPin = 12;
+ 
+void setup ()
+{
+  // Setup pins as Outputs
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
 }
-
+ 
 void loop() {
-
-  while (Serial.available() > 0) {      // Si hay datos disponibles en el puerto UART principal
-    char c = Serial.read();             // Lee un carácter
-    Serial2.write(c);                   // Escribe el carácter en el segundo puerto UART
-  
-    if(c=='r'){
-      val = ~val;
-      digitalWrite(2,val);
-    }
-  }
-
-  while (Serial2.available() > 0) {     // Si hay datos disponibles en el segundo puerto UART
-    char c = Serial2.read();            // Lee un carácter
-    Serial.write(c);                    // Escribe el carácter en el puerto UART principal
-
-    if(c=='r'){
-      val = ~val;
-      digitalWrite(2,val);
-    }
+  // Count from 0 to 255 and display in binary
+ 
+  for (int numberToDisplay = 0; numberToDisplay < 256; numberToDisplay++) {
+ 
+    // ST_CP LOW to keep LEDs from changing while reading serial data
+    digitalWrite(latchPin, LOW);
+ 
+    // Shift out the bits
+    shiftOut(dataPin, clockPin, MSBFIRST, numberToDisplay);
+ 
+    // ST_CP HIGH change LEDs
+    digitalWrite(latchPin, HIGH);
+ 
+    delay(500);
   }
 }
