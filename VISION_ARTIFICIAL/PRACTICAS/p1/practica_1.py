@@ -15,9 +15,9 @@ import random
 from pyparsing import col
 
 #imagenes para usar
-pic_1 = Image.open("PRACTICAS/p1/nadeko.jpeg")
-pic_2 = Image.open("PRACTICAS/p1/portada.jpg")
-pic_3 = Image.open("PRACTICAS/p1/ononoki.jpg")
+pic_1 = Image.open("nadeko.jpeg")
+pic_2 = Image.open("portada.jpg")
+pic_3 = Image.open("ononoki.jpg")
 
 pics = [pic_1,pic_2,pic_3]
 
