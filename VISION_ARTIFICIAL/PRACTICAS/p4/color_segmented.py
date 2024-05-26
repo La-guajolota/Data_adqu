@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 
 
-img = Image.open("VISION_ARTIFICIAL\PRACTICAS\p4\coins2.jpg")
+img = Image.open("PRACTICAS/p4/coins2.jpg")
 img_array = np.array(img)
 img_array = cv2.resize(img_array,(500,300))
 
