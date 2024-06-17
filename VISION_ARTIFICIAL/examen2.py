@@ -1,71 +1,73 @@
-import cv2
 import numpy as np
+import cv2 as cv
 
-# Función para redimensionar una imagen manteniendo la proporción
-def resize_image(image, width=None, height=None):
-    if width is None and height is None:
-        return image
-    h, w = image.shape[:2]
-    if width is None:
-        ratio = height / float(h)
-        dimension = (int(w * ratio), height)
-    else:
-        ratio = width / float(w)
-        dimension = (width, int(h * ratio))
-    return cv2.resize(image, dimension, interpolation=cv2.INTER_AREA)
+# Definir la fuente y el tamaño del texto
+fuente = cv.FONT_HERSHEY_SIMPLEX
+escala = 0.5  # escala de la fuente
+color_texto = (255, 0, 0)  # color del texto en BGR (azul, verde, rojo)
+grosor = 1  # grosor del texto
 
-# Función para aplicar suavizado a un canal de color
-def apply_smoothing(channel):
-    channel_copy = np.copy(channel)
-    smoothed_channel = cv2.medianBlur(channel_copy, 1)
-    return smoothed_channel
+# Color del contorno
+color_contorno = (0, 0, 255)  # rojo en BGR
 
-# Abrir la cámara
-cap = cv2.VideoCapture(0)
+# Relación píxeles a centímetros (esto debe ser ajustado basado en la calibración de tu cámara)
+pixel_cm_ratio = 0.013  # ejemplo: 1 pixel = 0.013 cm
+
+# Abre la cámara
+cap = cv.VideoCapture(1)
 
 while True:
-    # Capturar un frame de la cámara
-    _, frame = cap.read()
-
-    # Convertir la imagen a diferentes espacios de color
-    rgb_img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    lab_img = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
-    hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-    # Redimensionar las imágenes para que se ajusten a la pantalla
-    resized_rgb = resize_image(rgb_img, width=300)
-    resized_lab = resize_image(lab_img, width=300)
-    resized_hsv = resize_image(hsv_img, width=300)
-
-    # Aplicar suavizado a los canales RGB
-    smooth_rgb_r = apply_smoothing(resized_rgb[:, :, 0])
-    smooth_rgb_g = apply_smoothing(resized_rgb[:, :, 1])
-    smooth_rgb_b = apply_smoothing(resized_rgb[:, :, 2])
-
-    # Aplicar suavizado a los canales LAB
-    smooth_lab_l = apply_smoothing(resized_lab[:, :, 0])
-    smooth_lab_a = apply_smoothing(resized_lab[:, :, 1])
-    smooth_lab_b = apply_smoothing(resized_lab[:, :, 2])
-
-    # Aplicar suavizado a los canales HSV
-    smooth_hsv_h = apply_smoothing(resized_hsv[:, :, 0])
-    smooth_hsv_s = apply_smoothing(resized_hsv[:, :, 1])
-    smooth_hsv_v = apply_smoothing(resized_hsv[:, :, 2])
-
-    # Organizar las imágenes en un mosaico con nombres descriptivos
-    stacked_image = np.vstack((
-        np.hstack((smooth_rgb_r, smooth_rgb_g, smooth_rgb_b)),
-        np.hstack((smooth_lab_l, smooth_lab_a, smooth_lab_b)),
-        np.hstack((smooth_hsv_h, smooth_hsv_s, smooth_hsv_v))
-    ))
-
-    # Mostrar el mosaico con nombres descriptivos
-    cv2.imshow("Mosaico de Canales de Color con Suavizado", stacked_image)
-
-    # Salir del bucle si se presiona 'q'
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    ret, frame = cap.read()
+    if not ret:
         break
 
-# Liberar la cámara y cerrar todas las ventanas
+    # Convertir a escala de grises
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    
+    # Aplicar desenfoque gaussiano
+    gauss = cv.GaussianBlur(gray, (5, 5), 0)
+    
+    # Aplicar umbralización binaria inversa
+    _, bin_img = cv.threshold(gauss, 150, 255, cv.THRESH_BINARY_INV)
+    
+    # Detección de bordes con Canny
+    edges = cv.Canny(bin_img, 10, 40)
+    
+    # Encontrar contornos
+    contours, _ = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+
+    for contour in contours:
+        # Aproximar el contorno por un polígono
+        perimetro = cv.arcLength(contour, True)
+        epsilon = 0.02 * perimetro
+        approx = cv.approxPolyDP(contour, epsilon, True)
+
+        if len(approx) == 4:  # Detectar rectángulos (4 vértices)
+            x, y, w, h = cv.boundingRect(approx)
+            area = w * h
+            cv.rectangle(frame, (x, y), (x + w, y + h), color_contorno, 2)
+
+            # Calcular y mostrar el área del rectángulo en la terminal
+            print(f'Área: {area}')
+            
+            # Medir los lados en cm y mostrar en la imagen
+            lados_cm = []
+            for i in range(len(approx)):
+                p1 = approx[i][0]
+                p2 = approx[(i + 1) % len(approx)][0]
+                distancia = np.linalg.norm(p1 - p2) * pixel_cm_ratio
+                lados_cm.append(distancia)
+                pos = (int((p1[0] + p2[0]) / 2), int((p1[1] + p2[1]) / 2))
+                cv.putText(frame, f"{distancia:.2f} cm", pos, fuente, escala, color_texto, grosor)
+
+            # Mostrar el área en la imagen
+            cv.putText(frame, f"Área: {area}", (x, y - 10), fuente, escala, color_texto, grosor)
+
+    # Mostrar la imagen con rectángulos y medidas
+    cv.imshow("Medidas en cm", frame)
+
+    if cv.waitKey(1) & 0xFF == ord('q'):
+        break
+
 cap.release()
-cv2.destroyAllWindows()
+cv.destroyAllWindows()
