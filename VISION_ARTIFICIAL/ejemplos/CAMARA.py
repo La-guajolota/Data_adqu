@@ -27,7 +27,7 @@ while True:
     # frame -> 
     _,frame = cap.read()
     smooth = apply_filter(frame)
-    cv2.imshow("imagen",smooth)
+    cv2.imshow("imagen",frame)
     
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break

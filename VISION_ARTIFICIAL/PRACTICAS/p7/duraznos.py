@@ -2,14 +2,14 @@ import cv2
 import numpy as np
 from PIL import Image
 
-num = 0
+num = 1
 #imagenes para usar
-pic_1 = Image.open("PRACTICAS/p7/D0.jpg") #B
-pic_2 = Image.open("PRACTICAS/p7/D1.jpg") #S
-pic_3 = Image.open("PRACTICAS/p7/D2.jpg")
-pic_4 = Image.open("PRACTICAS/p7/D3.jpg")
-pic_5 = Image.open("PRACTICAS/p7/D4.jpg")
-pic_6 = Image.open("PRACTICAS/p7/D5.jpg")
+pic_1 = Image.open("D:/Sexto_sem/Adq_datos/VISION_ARTIFICIAL/PRACTICAS/p7/D0.jpg") #B
+pic_2 = Image.open("D:/Sexto_sem/Adq_datos/VISION_ARTIFICIAL/PRACTICAS/p7/D1.jpg") #S
+pic_3 = Image.open("D:/Sexto_sem/Adq_datos/VISION_ARTIFICIAL/PRACTICAS/p7/D2.jpg")
+pic_4 = Image.open("D:/Sexto_sem/Adq_datos/VISION_ARTIFICIAL/PRACTICAS/p7/D3.jpg")
+pic_5 = Image.open("D:/Sexto_sem/Adq_datos/VISION_ARTIFICIAL/PRACTICAS/p7/D4.jpg")
+pic_6 = Image.open("D:/Sexto_sem/Adq_datos/VISION_ARTIFICIAL/PRACTICAS/p7/D5.jpg")
 
 pics = [pic_1,pic_2,pic_3,pic_4,pic_5,pic_6]
 pics_arrs = [np.array(pic) for pic in pics] #para arrays
@@ -78,7 +78,6 @@ try:
 except TypeError as error:
     print("Ocurrió un error:", error)
     print("No hay duraznos")
-
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

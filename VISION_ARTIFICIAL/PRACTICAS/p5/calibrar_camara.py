@@ -1,4 +1,3 @@
-from pydoc import apropos
 import cv2
 import numpy as np
 
@@ -9,7 +8,7 @@ color = (255, 0, 0)  # color del texto en BGR (azul, verde, rojo)
 grosor = 2  # grosor del texto
 
 #Abren la camara
-cap =  cv2.VideoCapture(1)
+cap =  cv2.VideoCapture(0)
 while True:
     
     _,frame = cap.read()
